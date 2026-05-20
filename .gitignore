@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
+*.pyc
 
 # Virtual environments
 venv/
@@ -22,6 +23,7 @@ passenger_wsgi.pyc
 instance/
 
 # Logs
+passenger.log
 *.log
 logs/
 
@@ -50,4 +52,12 @@ dist/
 build/
 *.egg-info/
 
+# cPanel / server generated folders
 .htaccess
+cgi-bin/
+public/
+tmp/
+.well-known/
+p/
+-/
+
