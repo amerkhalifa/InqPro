@@ -1,0 +1,604 @@
+{
+    "campaigns": [
+        {
+            "id": "bing-180762716-531176777",
+            "engine": "Bing",
+            "account_name": "Appliance Repair",
+            "account_id": "180762716",
+            "campaign_name": "GS Appliance Repair",
+            "campaign_id": "531176777",
+            "setting_id": "1ef13979",
+            "notes": ""
+        },
+        {
+            "id": "bing-180765222-532154174",
+            "engine": "Bing",
+            "account_name": "Appliance Repair Pros",
+            "account_id": "180765222",
+            "campaign_name": "GS Appliance Repair Pros",
+            "campaign_id": "532154174",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763639-531380572",
+            "engine": "Bing",
+            "account_name": "Biohazard",
+            "account_id": "180763639",
+            "campaign_name": "Biohazard",
+            "campaign_id": "531380572",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763557-23723037349",
+            "engine": "Bing",
+            "account_name": "Electrical",
+            "account_id": "180763557",
+            "campaign_name": "Electrical",
+            "campaign_id": "23723037349",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763557-531350000",
+            "engine": "Bing",
+            "account_name": "Electrical",
+            "account_id": "180763557",
+            "campaign_name": "Electrical",
+            "campaign_id": "531350000",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763181-531242344",
+            "engine": "Bing",
+            "account_name": "Fire",
+            "account_id": "180763181",
+            "campaign_name": "GS Fire Main",
+            "campaign_id": "531242344",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180765084-531947781",
+            "engine": "Bing",
+            "account_name": "Flooring",
+            "account_id": "180765084",
+            "campaign_name": "Flooring",
+            "campaign_id": "531947781",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763110-531236119",
+            "engine": "Bing",
+            "account_name": "HVAC",
+            "account_id": "180763110",
+            "campaign_name": "HVAC - roas",
+            "campaign_id": "531236119",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180763110-533498246",
+            "engine": "Bing",
+            "account_name": "HVAC",
+            "account_id": "180763110",
+            "campaign_name": "HVAC \u2013 Cooling",
+            "campaign_id": "533498246",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180764391-531558130",
+            "engine": "Bing",
+            "account_name": "Locksmith",
+            "account_id": "180764391",
+            "campaign_name": "Locksmith",
+            "campaign_id": "531558130",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180163821-531273369",
+            "engine": "Bing",
+            "account_name": "Mold Advisor",
+            "account_id": "180163821",
+            "campaign_name": "GD Remarketing",
+            "campaign_id": "531273369",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180163821-316592890",
+            "engine": "Bing",
+            "account_name": "Mold Advisor",
+            "account_id": "180163821",
+            "campaign_name": "GS Mold Main",
+            "campaign_id": "316592890",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180163821-316850684",
+            "engine": "Bing",
+            "account_name": "Mold Advisor",
+            "account_id": "180163821",
+            "campaign_name": "GS Mold Testing/Inspection",
+            "campaign_id": "316850684",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-141331013-403380654",
+            "engine": "Bing",
+            "account_name": "Mold Restoration",
+            "account_id": "141331013",
+            "campaign_name": "GS Mold Main - MR-G11017443328",
+            "campaign_id": "403380654",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180764019-531510275",
+            "engine": "Bing",
+            "account_name": "Pest Control - lnsect.com",
+            "account_id": "180764019",
+            "campaign_name": "Pest Control",
+            "campaign_id": "531510275",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180764019-533194196",
+            "engine": "Bing",
+            "account_name": "Pest Control - lnsect.com",
+            "account_id": "180764019",
+            "campaign_name": "Pmax",
+            "campaign_id": "533194196",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180434957-530537683",
+            "engine": "Bing",
+            "account_name": "Restoratlon.com",
+            "account_id": "180434957",
+            "campaign_name": "GS Restoration - Water Brands",
+            "campaign_id": "530537683",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180434957-413247388",
+            "engine": "Bing",
+            "account_name": "Restoratlon.com",
+            "account_id": "180434957",
+            "campaign_name": "GS Restoration - Water Main",
+            "campaign_id": "413247388",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180760411-531163618",
+            "engine": "Bing",
+            "account_name": "Roofingmasters.com",
+            "account_id": "180760411",
+            "campaign_name": "GS Commercial Roofing",
+            "campaign_id": "531163618",
+            "notes": "skip",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180760411-531191705",
+            "engine": "Bing",
+            "account_name": "Roofingmasters.com",
+            "account_id": "180760411",
+            "campaign_name": "GS Roof Repair",
+            "campaign_id": "531191705",
+            "notes": "skip",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180760411-530881666",
+            "engine": "Bing",
+            "account_name": "Roofingmasters.com",
+            "account_id": "180760411",
+            "campaign_name": "GS Roofing General",
+            "campaign_id": "530881666",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180764300-531645246",
+            "engine": "Bing",
+            "account_name": "Tree Services",
+            "account_id": "180764300",
+            "campaign_name": "Tree Services",
+            "campaign_id": "531645246",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180754291-530643319",
+            "engine": "Bing",
+            "account_name": "Wateremoval.com",
+            "account_id": "180754291",
+            "campaign_name": "GS WR - Water Brands",
+            "campaign_id": "530643319",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180754291-530643318",
+            "engine": "Bing",
+            "account_name": "Wateremoval.com",
+            "account_id": "180754291",
+            "campaign_name": "GS WR Water Main",
+            "campaign_id": "530643318",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180767016-533003364",
+            "engine": "Bing",
+            "account_name": "asbestoscosts.com",
+            "account_id": "180767016",
+            "campaign_name": "GS Asbestos Removal",
+            "campaign_id": "533003364",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180770054-533372637",
+            "engine": "Bing",
+            "account_name": "garagecosts.com",
+            "account_id": "180770054",
+            "campaign_name": "Garage Doors",
+            "campaign_id": "533372637",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "bing-180753920-531295663",
+            "engine": "Bing",
+            "account_name": "plumblng.com",
+            "account_id": "180753920",
+            "campaign_name": "GS Plumbing - ROAS",
+            "campaign_id": "531295663",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-5137410350-20988331859",
+            "engine": "Google",
+            "account_name": "Appliance Repair",
+            "account_id": "5137410350",
+            "campaign_name": "GS Appliance Repair",
+            "campaign_id": "20988331859",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-5137410350-22596929910",
+            "engine": "Google",
+            "account_name": "Appliance Repair",
+            "account_id": "5137410350",
+            "campaign_name": "GS Appliance Repair - PMAX",
+            "campaign_id": "22596929910",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-5137410350-23601380876",
+            "engine": "Google",
+            "account_name": "Appliance Repair",
+            "account_id": "5137410350",
+            "campaign_name": "GS Appliance Repair - PMAX - Incubator",
+            "campaign_id": "23601380876",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-5137410350-23758591376",
+            "engine": "Google",
+            "account_name": "Appliance Repair",
+            "account_id": "5137410350",
+            "campaign_name": "GS Appliance Repair - PMAX - Incubator",
+            "campaign_id": "23758591376",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2984480495-21802602867",
+            "engine": "Google",
+            "account_name": "Appliance Repair Pros",
+            "account_id": "2984480495",
+            "campaign_name": "GS Appliance Repair Pros",
+            "campaign_id": "21802602867",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2984480495-23583896062",
+            "engine": "Google",
+            "account_name": "Appliance Repair Pros",
+            "account_id": "2984480495",
+            "campaign_name": "GS Appliance Repair Pros - PMAX",
+            "campaign_id": "23583896062",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-1285025546-21223889975",
+            "engine": "Google",
+            "account_name": "Biohazard",
+            "account_id": "1285025546",
+            "campaign_name": "Biohazard",
+            "campaign_id": "21223889975",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3201919817-23723037349",
+            "engine": "Google",
+            "account_name": "Electrical",
+            "account_id": "3201919817",
+            "campaign_name": "Electrical",
+            "campaign_id": "23723037349",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3201919817-21122507728",
+            "engine": "Google",
+            "account_name": "Electrical",
+            "account_id": "3201919817",
+            "campaign_name": "Electrical",
+            "campaign_id": "21122507728",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4143043262-20144630366",
+            "engine": "Google",
+            "account_name": "Fire",
+            "account_id": "4143043262",
+            "campaign_name": "GS Fire Main",
+            "campaign_id": "20144630366",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-5166372335-21672325844",
+            "engine": "Google",
+            "account_name": "Flooring",
+            "account_id": "5166372335",
+            "campaign_name": "Flooring",
+            "campaign_id": "21672325844",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-7550110223-23649998075",
+            "engine": "Google",
+            "account_name": "Garage Doors",
+            "account_id": "7550110223",
+            "campaign_name": "Garage Doors",
+            "campaign_id": "23649998075",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3909134525-21037022085",
+            "engine": "Google",
+            "account_name": "HVAC",
+            "account_id": "3909134525",
+            "campaign_name": "HVAC - roas",
+            "campaign_id": "21037022085",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3909134525-23856524575",
+            "engine": "Google",
+            "account_name": "HVAC",
+            "account_id": "3909134525",
+            "campaign_name": "HVAC Pmax",
+            "campaign_id": "23856524575",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3909134525-23719157695",
+            "engine": "Google",
+            "account_name": "HVAC",
+            "account_id": "3909134525",
+            "campaign_name": "HVAC \u2013 Cooling",
+            "campaign_id": "23719157695",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2241661145-21485332480",
+            "engine": "Google",
+            "account_name": "Locksmith",
+            "account_id": "2241661145",
+            "campaign_name": "Locksmith",
+            "campaign_id": "21485332480",
+            "notes": "skip",
+            "setting_id": ""
+        },
+        {
+            "id": "google-1488200211-11017443328",
+            "engine": "Google",
+            "account_name": "Mold Restoration",
+            "account_id": "1488200211",
+            "campaign_name": "GS Mold Main - MR",
+            "campaign_id": "11017443328",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-8884493215-21267926562",
+            "engine": "Google",
+            "account_name": "Pest Control",
+            "account_id": "8884493215",
+            "campaign_name": "Pest Control",
+            "campaign_id": "21267926562",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-8884493215-22611214729",
+            "engine": "Google",
+            "account_name": "Pest Control",
+            "account_id": "8884493215",
+            "campaign_name": "Pmax",
+            "campaign_id": "22611214729",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-1727628729-21075169151",
+            "engine": "Google",
+            "account_name": "Plumbing",
+            "account_id": "1727628729",
+            "campaign_name": "GS Plumbing - ROAS",
+            "campaign_id": "21075169151",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-7872090899-18654776801",
+            "engine": "Google",
+            "account_name": "Restoratlon.com",
+            "account_id": "7872090899",
+            "campaign_name": "GS Restoration - Water Brands",
+            "campaign_id": "18654776801",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-7872090899-12665880372",
+            "engine": "Google",
+            "account_name": "Restoratlon.com",
+            "account_id": "7872090899",
+            "campaign_name": "GS Restoration - Water Main",
+            "campaign_id": "12665880372",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-7872090899-23693318368",
+            "engine": "Google",
+            "account_name": "Restoratlon.com",
+            "account_id": "7872090899",
+            "campaign_name": "Performance Max - Restoration",
+            "campaign_id": "23693318368",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2033165544-20985215747",
+            "engine": "Google",
+            "account_name": "Roofing",
+            "account_id": "2033165544",
+            "campaign_name": "GS Commercial Roofing",
+            "campaign_id": "20985215747",
+            "notes": "skip",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2033165544-21024528931",
+            "engine": "Google",
+            "account_name": "Roofing",
+            "account_id": "2033165544",
+            "campaign_name": "GS Roof Repair",
+            "campaign_id": "21024528931",
+            "notes": "skip",
+            "setting_id": ""
+        },
+        {
+            "id": "google-2033165544-20436621256",
+            "engine": "Google",
+            "account_name": "Roofing",
+            "account_id": "2033165544",
+            "campaign_name": "GS Roofing General",
+            "campaign_id": "20436621256",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-9073782729-21320647901",
+            "engine": "Google",
+            "account_name": "Tree Services",
+            "account_id": "9073782729",
+            "campaign_name": "Tree Services",
+            "campaign_id": "21320647901",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4318926603-19896815742",
+            "engine": "Google",
+            "account_name": "Wateremoval.com",
+            "account_id": "4318926603",
+            "campaign_name": "GS WR - Water Brands",
+            "campaign_id": "19896815742",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4318926603-23180904646",
+            "engine": "Google",
+            "account_name": "Wateremoval.com",
+            "account_id": "4318926603",
+            "campaign_name": "GS WR - Water Brands Max Clicks Bidding",
+            "campaign_id": "23180904646",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4318926603-19308136969",
+            "engine": "Google",
+            "account_name": "Wateremoval.com",
+            "account_id": "4318926603",
+            "campaign_name": "GS WR Water Main",
+            "campaign_id": "19308136969",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4318926603-23175939548",
+            "engine": "Google",
+            "account_name": "Wateremoval.com",
+            "account_id": "4318926603",
+            "campaign_name": "GS WR Water Main - Max Conv",
+            "campaign_id": "23175939548",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-4318926603-22602652032",
+            "engine": "Google",
+            "account_name": "Wateremoval.com",
+            "account_id": "4318926603",
+            "campaign_name": "GS WR Water Main - Pmax",
+            "campaign_id": "22602652032",
+            "notes": "",
+            "setting_id": ""
+        },
+        {
+            "id": "google-3619647841-22356743494",
+            "engine": "Google",
+            "account_name": "asbestoscosts.com",
+            "account_id": "3619647841",
+            "campaign_name": "GS Asbestos Removal",
+            "campaign_id": "22356743494",
+            "notes": "",
+            "setting_id": ""
+        }
+    ]
+}

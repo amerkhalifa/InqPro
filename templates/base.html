@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>{% block title %}InqPro{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='app.css') }}"
+    >
+</head>
+
+<body>
+    <main class="page">
+        <nav class="nav">
+            <a
+                href="{{ url_for('settings.settings_index') }}"
+                class="{% if active_page == 'settings' %}active{% endif %}"
+            >
+                Settings Files
+            </a>
+
+            <a
+                href="{{ url_for('campaigns.campaigns_index') }}"
+                class="{% if active_page == 'campaigns' %}active{% endif %}"
+            >
+                Campaign Mappings
+            </a>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-wrap">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

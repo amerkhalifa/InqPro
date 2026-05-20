@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% set active_page = "campaigns" %}
+
+{% block title %}Campaign Mappings{% endblock %}
+
+{% block content %}
+    <div class="topbar">
+        <div>
+            <h1>Campaign Mappings</h1>
+            <div class="subtitle">
+                Manage Google/Bing campaigns and assign one settings file to each campaign.
+            </div>
+        </div>
+
+        <a class="button" href="{{ url_for('campaigns.create_campaign_page') }}">
+            New Campaign
+        </a>
+    </div>
+
+    <section class="card">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Campaigns</div>
+                <div class="stat-value">{{ total_campaigns }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Mapped</div>
+                <div class="stat-value">{{ total_mapped_campaigns }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Engines</div>
+                <div class="stat-value">{{ total_engines }}</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">Accounts</div>
+                <div class="stat-value">{{ total_accounts }}</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Import Existing CSV</h2>
+
+        <p class="muted">
+            Upload your current mapping CSV. Existing campaign settings assignments
+            are preserved during import.
+        </p>
+
+        <form
+            class="actions"
+            method="post"
+            action="{{ url_for('campaigns.import_campaigns_csv') }}"
+            enctype="multipart/form-data"
+        >
+            <input type="file" name="csv_file" accept=".csv">
+            <button class="secondary" type="submit">Import CSV</button>
+        </form>
+    </section>
+
+    <section class="table-wrap">
+        {% if campaigns %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Engine</th>
+                        <th>Account Name</th>
+                        <th>Account ID</th>
+                        <th>Campaign Name</th>
+                        <th>Campaign ID</th>
+                        <th>Settings File</th>
+                        <th>Notes</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for campaign in campaigns %}
+                        <tr>
+                            <td>
+                                <span class="pill">{{ campaign.engine }}</span>
+                            </td>
+
+                            <td>{{ campaign.account_name }}</td>
+                            <td>{{ campaign.account_id }}</td>
+                            <td>{{ campaign.campaign_name }}</td>
+                            <td>{{ campaign.campaign_id }}</td>
+
+                            <td>
+                                {% if campaign.setting_name %}
+                                    <strong>{{ campaign.setting_name }}</strong>
+                                    <div class="small muted">
+                                        {{ campaign.setting_id }}
+                                    </div>
+                                {% else %}
+                                    <span class="status-unmapped">Not mapped</span>
+                                {% endif %}
+                            </td>
+
+                            <td>{{ campaign.notes }}</td>
+
+                            <td>
+                                <div class="actions">
+                                    <a
+                                        class="button secondary"
+                                        href="{{ url_for('campaigns.edit_campaign_page', campaign_id=campaign.id) }}"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    <form
+                                        class="inline"
+                                        method="post"
+                                        action="{{ url_for('campaigns.delete_campaign_page', campaign_id=campaign.id) }}"
+                                        onsubmit="return confirm('Delete this campaign?');"
+                                    >
+                                        <button class="danger" type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty">
+                No campaigns yet. Create one or import your current CSV.
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

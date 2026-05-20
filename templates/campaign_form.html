@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% set active_page = "campaigns" %}
+
+{% if mode == "edit" %}
+    {% set page_title = "Edit Campaign" %}
+{% else %}
+    {% set page_title = "New Campaign" %}
+{% endif %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+    <div class="topbar">
+        <div>
+            <h1>{{ page_title }}</h1>
+
+            {% if mode == "edit" %}
+                <div class="subtitle">
+                    Update this campaign and assign its settings file.
+                </div>
+            {% else %}
+                <div class="subtitle">
+                    Add a new Google or Bing campaign and assign one settings file.
+                </div>
+            {% endif %}
+        </div>
+
+        <a class="button secondary" href="{{ url_for('campaigns.campaigns_index') }}">
+            Back
+        </a>
+    </div>
+
+    <section class="card form-card">
+        <form method="post">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="engine">Engine</label>
+                    <select id="engine" name="engine" required>
+                        <option value="Google" {% if campaign.engine == "Google" %}selected{% endif %}>
+                            Google
+                        </option>
+
+                        <option value="Bing" {% if campaign.engine == "Bing" %}selected{% endif %}>
+                            Bing
+                        </option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="account_name">Account Name</label>
+                    <input
+                        id="account_name"
+                        name="account_name"
+                        type="text"
+                        value="{{ campaign.account_name }}"
+                        required
+                    >
+                    <div class="hint">
+                        Example: Appliance Repair, HVAC, Plumbing, Roofing.
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="account_id">Account ID</label>
+                    <input
+                        id="account_id"
+                        name="account_id"
+                        type="text"
+                        value="{{ campaign.account_id }}"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="campaign_name">Campaign Name</label>
+                    <input
+                        id="campaign_name"
+                        name="campaign_name"
+                        type="text"
+                        value="{{ campaign.campaign_name }}"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="campaign_id">Campaign ID</label>
+                    <input
+                        id="campaign_id"
+                        name="campaign_id"
+                        type="text"
+                        value="{{ campaign.campaign_id }}"
+                        required
+                    >
+
+                    {% if mode == "edit" %}
+                        <div class="hint">
+                            For now, changing this visible Campaign ID keeps the internal row ID stable.
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="field full-width">
+                    <label for="setting_id">Settings File</label>
+
+                    <select id="setting_id" name="setting_id">
+                        <option value="" {% if not campaign.get("setting_id") %}selected{% endif %}>
+                            No settings file selected
+                        </option>
+
+                        {% for setting in available_settings %}
+                            <option
+                                value="{{ setting.id }}"
+                                {% if campaign.get("setting_id") == setting.id %}selected{% endif %}
+                            >
+                                {{ setting.name }} — {{ setting.id }}
+                            </option>
+                        {% endfor %}
+                    </select>
+
+                    <div class="hint">
+                        Each campaign can map to exactly one settings file.
+                    </div>
+                </div>
+
+                <div class="field full-width">
+                    <label for="notes">Notes</label>
+                    <textarea id="notes" name="notes">{{ campaign.notes }}</textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                {% if mode == "edit" %}
+                    <button type="submit">Save Changes</button>
+                {% else %}
+                    <button type="submit">Create Campaign</button>
+                {% endif %}
+
+                <a class="button secondary" href="{{ url_for('campaigns.campaigns_index') }}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

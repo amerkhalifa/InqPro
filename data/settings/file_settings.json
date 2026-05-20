@@ -1,0 +1,25 @@
+{
+    "geoid_lists": [
+        {
+            "name": "Roofing - Internal $50Min",
+            "zip->county": 1.0,
+            "county->state": 1.0,
+            "bidders": [
+                {
+                    "name": "Internal",
+                    "lead_type": "Leads",
+                    "tasks": [
+                        "Roofing"
+                    ],
+                    "min_price": 50.0,
+                    "max_price": 5000.0,
+                    "fs_props": {
+                        "property_type": "Residence",
+                        "job_type": "Install"
+                    }
+                }
+            ],
+            "id": "1ef13979"
+        }
+    ]
+}

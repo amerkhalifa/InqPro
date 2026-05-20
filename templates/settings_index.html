@@ -1,150 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>File Settings</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 24px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+{% set active_page = "settings" %}
 
-        h1 {
-            margin-bottom: 8px;
-        }
+{% block title %}File Settings{% endblock %}
 
-        .top-bar {
-            margin-bottom: 24px;
-        }
+{% block content %}
+    <div class="topbar">
+        <div>
+            <h1>File Settings</h1>
+            <div class="subtitle">
+                Manage reusable settings files for bidder, lead type, task, and threshold logic.
+            </div>
+        </div>
 
-        .button {
-            display: inline-block;
-            padding: 8px 12px;
-            background: #222;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .button.secondary {
-            background: #666;
-        }
-
-        .button.danger {
-            background: #b00020;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        th {
-            background: #f5f5f5;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .empty {
-            padding: 16px;
-            border: 1px solid #ddd;
-            background: #fafafa;
-            border-radius: 6px;
-        }
-
-        .muted {
-            color: #666;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>File Settings</h1>
-
-    <div class="top-bar">
         <a class="button" href="{{ url_for('settings.create_setting') }}">
             Create New Setting
         </a>
     </div>
 
-    {% if geoid_lists %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>ID</th>
-                    <th>Zip → County</th>
-                    <th>County → State</th>
-                    <th>Bidders</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
+    <section class="card">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Settings Files</div>
+                <div class="stat-value">{{ geoid_lists|length }}</div>
+            </div>
 
-            <tbody>
-                {% for setting in geoid_lists %}
-                    <tr>
-                        <td>{{ setting.name }}</td>
-                        <td>{{ setting.id }}</td>
-                        <td>{{ setting["zip->county"] }}</td>
-                        <td>{{ setting["county->state"] }}</td>
-                        <td>
-                            {% if setting.bidders %}
-                                {{ setting.bidders | length }}
-
-                                <div class="muted">
-                                    {% for bidder in setting.bidders %}
-                                        {{ bidder.name }} - {{ bidder.lead_type }}{% if not loop.last %}<br>{% endif %}
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                0
-                            {% endif %}
-                        </td>
-                        <td>
-                            <div class="actions">
-                                <a
-                                    class="button secondary"
-                                    href="{{ url_for('settings.edit_setting', setting_id=setting.id) }}"
-                                >
-                                    Edit
-                                </a>
-
-                                <form
-                                    method="POST"
-                                    action="{{ url_for('settings.delete_setting', setting_id=setting.id) }}"
-                                    onsubmit="return confirm('Delete this setting?');"
-                                >
-                                    <button class="button danger" type="submit">
-                                        Delete
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div class="empty">
-            No file settings yet.
+            <div class="stat">
+                <div class="stat-label">Total Bidders</div>
+                <div class="stat-value">
+                    {% set ns = namespace(total=0) %}
+                    {% for setting in geoid_lists %}
+                        {% set ns.total = ns.total + setting.get("bidders", [])|length %}
+                    {% endfor %}
+                    {{ ns.total }}
+                </div>
+            </div>
         </div>
-    {% endif %}
-</body>
-</html>
+    </section>
+
+    <section class="table-wrap">
+        {% if geoid_lists %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID</th>
+                        <th>Zip → County</th>
+                        <th>County → State</th>
+                        <th>Bidders</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for setting in geoid_lists %}
+                        <tr>
+                            <td>
+                                <strong>{{ setting.name }}</strong>
+                            </td>
+
+                            <td>
+                                <span class="pill">{{ setting.id }}</span>
+                            </td>
+
+                            <td>{{ setting.get("zip->county", "") }}</td>
+
+                            <td>{{ setting.get("county->state", "") }}</td>
+
+                            <td>
+                                {% if setting.get("bidders") %}
+                                    <ul class="bidder-list">
+                                        {% for bidder in setting.get("bidders", []) %}
+                                            <li>
+                                                <strong>{{ bidder.name }}</strong>
+                                                <span class="muted">
+                                                    -
+                                                    {{ bidder.lead_type }}
+                                                </span>
+
+                                                {% if bidder.get("tasks") %}
+                                                    <div class="small muted">
+                                                        {{ bidder.get("tasks", [])|join(", ") }}
+                                                    </div>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <span class="muted">No bidders</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="actions">
+                                    <a
+                                        class="button secondary"
+                                        href="{{ url_for('settings.edit_setting', setting_id=setting.id) }}"
+                                    >
+                                        Edit
+                                    </a>
+
+                                    <form
+                                        class="inline"
+                                        method="post"
+                                        action="{{ url_for('settings.delete_setting', setting_id=setting.id) }}"
+                                        onsubmit="return confirm('Delete this setting?');"
+                                    >
+                                        <button class="danger" type="submit">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="empty">
+                No settings files yet. Create one to get started.
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

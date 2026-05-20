@@ -15,7 +15,7 @@ from config.settings_options import (
 )
 
 
-SETTINGS_PATH = Path("data/file_settings.json")
+SETTINGS_PATH = Path("data/settings/file_settings.json")
 
 
 def load_settings():

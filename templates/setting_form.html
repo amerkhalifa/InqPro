@@ -1,771 +1,484 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ "Create" if mode == "create" else "Edit" }} File Setting</title>
+{% extends "base.html" %}
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 24px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+{% set active_page = "settings" %}
 
-        label {
-            display: block;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
+{% if mode == "edit" %}
+    {% set page_title = "Edit Setting" %}
+{% else %}
+    {% set page_title = "Create New Setting" %}
+{% endif %}
 
-        input,
-        select {
-            display: block;
-            margin-top: 4px;
-            padding: 8px;
-            min-width: 320px;
-            max-width: 100%;
-        }
+{% block title %}{{ page_title }}{% endblock %}
 
-        .hint {
-            color: #666;
-            font-size: 13px;
-            margin-top: -6px;
-            margin-bottom: 12px;
-        }
+{% block content %}
+    <div class="topbar">
+        <div>
+            <h1>{{ page_title }}</h1>
 
-        .section {
-            margin-bottom: 28px;
-        }
-
-        .bidder-card {
-            border: 1px solid #ccc;
-            padding: 18px;
-            margin-bottom: 18px;
-            border-radius: 8px;
-            background: #fafafa;
-        }
-
-        .bidder-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .bidder-header h3 {
-            margin: 0 0 16px;
-        }
-
-        .fs-props {
-            border-top: 1px solid #ddd;
-            padding-top: 12px;
-            margin-top: 14px;
-        }
-
-        .fs-prop-group {
-            margin-top: 12px;
-        }
-
-        .button-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 24px;
-        }
-
-        button,
-        .button-link {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 6px;
-            border: none;
-            font-size: 14px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        button.primary {
-            background: #222;
-            color: white;
-        }
-
-        button.secondary,
-        .button-link.secondary {
-            background: #666;
-            color: white;
-        }
-
-        button.danger {
-            color: white;
-            background: #b00020;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>{{ "Create" if mode == "create" else "Edit" }} File Setting</h1>
-
-    <form method="POST">
-        <div class="section">
-            <h2>Main Setting</h2>
-
-            <label>
-                Name:
-                <input
-                    type="text"
-                    name="name"
-                    value="{{ setting.name if setting else '' }}"
-                    required
-                >
-            </label>
-
-            <label>
-                Zip → County:
-                <input
-                    type="number"
-                    step="0.01"
-                    name="zip_to_county"
-                    value="{{ setting['zip->county'] if setting else '0.8' }}"
-                >
-            </label>
-
-            <label>
-                County → State:
-                <input
-                    type="number"
-                    step="0.01"
-                    name="county_to_state"
-                    value="{{ setting['county->state'] if setting else '1.0' }}"
-                >
-            </label>
+            {% if mode == "edit" %}
+                <div class="subtitle">
+                    Update this reusable settings file.
+                </div>
+            {% else %}
+                <div class="subtitle">
+                    Create a reusable settings file for bidder and threshold logic.
+                </div>
+            {% endif %}
         </div>
 
-        <hr>
+        <a class="button secondary" href="{{ url_for('settings.settings_index') }}">
+            Back
+        </a>
+    </div>
 
-        <div class="section">
-            <h2>Bidders</h2>
+    <section class="card form-card">
+        <form method="post">
+            <div class="form-grid">
+                <div class="field full-width">
+                    <label for="name">Setting Name</label>
+                    <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value="{{ setting.name if setting else '' }}"
+                        required
+                    >
+                    <div class="hint">
+                        Example: Roofing - Internal $50 Min
+                    </div>
+                </div>
 
-            <div class="hint">
-                Select a bidder, choose Calls or Leads, then select one task.
-                FS Props only appear for Internal.
+                <div class="field">
+                    <label for="zip_to_county">Zip → County Threshold</label>
+                    <input
+                        id="zip_to_county"
+                        name="zip_to_county"
+                        type="number"
+                        step="0.01"
+                        value="{{ setting.get('zip->county', '') if setting else '' }}"
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="county_to_state">County → State Threshold</label>
+                    <input
+                        id="county_to_state"
+                        name="county_to_state"
+                        type="number"
+                        step="0.01"
+                        value="{{ setting.get('county->state', '') if setting else '' }}"
+                    >
+                </div>
             </div>
 
-            <div id="bidders-container">
-                {% if setting and setting.bidders %}
-                    {% for bidder in setting.bidders %}
-                        {% set bidder_display_name = bidder.name if bidder.name else bidder.bidder %}
-                        {% set fs_props = bidder.fs_props if bidder.fs_props else {} %}
-
-                        <div class="bidder-card" data-bidder-index="{{ loop.index0 }}">
-                            <div class="bidder-header">
-                                <h3>Bidder {{ loop.index }}</h3>
-
-                                <button type="button" class="danger" onclick="removeBidder(this)">
-                                    Remove
-                                </button>
-                            </div>
-
-                            <label>
-                                Bidder Name:
-                                <select
-                                    name="bidders[{{ loop.index0 }}][name]"
-                                    class="bidder-name-select"
-                                    onchange="handleBidderNameChange(this)"
-                                    required
-                                >
-                                    {% for bidder_name in bidder_names %}
-                                        <option
-                                            value="{{ bidder_name }}"
-                                            {% if bidder_display_name == bidder_name %}selected{% endif %}
-                                        >
-                                            {{ bidder_name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </label>
-
-                            <label>
-                                Type:
-                                <select
-                                    name="bidders[{{ loop.index0 }}][lead_type]"
-                                    class="lead-type-select"
-                                    onchange="handleLeadTypeChange(this)"
-                                    required
-                                >
-                                    {% for lead_type in lead_types %}
-                                        <option
-                                            value="{{ lead_type }}"
-                                            {% if bidder.lead_type == lead_type %}selected{% endif %}
-                                        >
-                                            {{ lead_type }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            </label>
-
-                            <label>
-                                Task:
-                                <select
-                                    name="bidders[{{ loop.index0 }}][tasks]"
-                                    class="tasks-select"
-                                    data-selected-tasks='{{ bidder.tasks | tojson }}'
-                                    required
-                                ></select>
-                            </label>
-
-                            <label>
-                                Min Price:
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    name="bidders[{{ loop.index0 }}][min_price]"
-                                    value="{{ bidder.min_price if bidder.min_price is not none else '' }}"
-                                >
-                            </label>
-
-                            <label>
-                                Max Price:
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    name="bidders[{{ loop.index0 }}][max_price]"
-                                    value="{{ bidder.max_price if bidder.max_price is not none else '' }}"
-                                >
-                            </label>
-
-                            <div class="fs-props">
-                                <h4>FS Props</h4>
-
-                                <div class="fs-prop-group calls-fs-props">
-                                    <label>
-                                        Pest:
-                                        <select name="bidders[{{ loop.index0 }}][pest]" class="fs-prop-input">
-                                            <option value="">-- Select Pest --</option>
-
-                                            {% for pest in call_pest_options %}
-                                                <option
-                                                    value="{{ pest }}"
-                                                    {% if fs_props.pest == pest %}selected{% endif %}
-                                                >
-                                                    {{ pest }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Job Type:
-                                        <select name="bidders[{{ loop.index0 }}][job_type]" class="fs-prop-input">
-                                            <option value="">-- Select Job Type --</option>
-
-                                            {% for job_type in call_job_type_options %}
-                                                <option
-                                                    value="{{ job_type }}"
-                                                    {% if fs_props.job_type == job_type %}selected{% endif %}
-                                                >
-                                                    {{ job_type }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-                                </div>
-
-                                <div class="fs-prop-group leads-fs-props">
-                                    <label>
-                                        Material:
-                                        <select name="bidders[{{ loop.index0 }}][material]" class="fs-prop-input">
-                                            <option value="">-- Select Material --</option>
-
-                                            {% for material in lead_material_options %}
-                                                <option
-                                                    value="{{ material }}"
-                                                    {% if fs_props.material == material %}selected{% endif %}
-                                                >
-                                                    {{ material }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Property Type:
-                                        <select name="bidders[{{ loop.index0 }}][property_type]" class="fs-prop-input">
-                                            <option value="">-- Select Property Type --</option>
-
-                                            {% for property_type in lead_property_type_options %}
-                                                <option
-                                                    value="{{ property_type }}"
-                                                    {% if fs_props.property_type == property_type %}selected{% endif %}
-                                                >
-                                                    {{ property_type }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Job Type:
-                                        <select name="bidders[{{ loop.index0 }}][job_type]" class="fs-prop-input">
-                                            <option value="">-- Select Job Type --</option>
-
-                                            {% for job_type in lead_job_type_options %}
-                                                <option
-                                                    value="{{ job_type }}"
-                                                    {% if fs_props.job_type == job_type %}selected{% endif %}
-                                                >
-                                                    {{ job_type }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="bidder-card" data-bidder-index="0">
-                        <div class="bidder-header">
-                            <h3>Bidder 1</h3>
-
-                            <button type="button" class="danger" onclick="removeBidder(this)">
-                                Remove
-                            </button>
-                        </div>
-
-                        <label>
-                            Bidder Name:
-                            <select
-                                name="bidders[0][name]"
-                                class="bidder-name-select"
-                                onchange="handleBidderNameChange(this)"
-                                required
-                            >
-                                {% for bidder_name in bidder_names %}
-                                    <option value="{{ bidder_name }}">
-                                        {{ bidder_name }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </label>
-
-                        <label>
-                            Type:
-                            <select
-                                name="bidders[0][lead_type]"
-                                class="lead-type-select"
-                                onchange="handleLeadTypeChange(this)"
-                                required
-                            >
-                                {% for lead_type in lead_types %}
-                                    <option value="{{ lead_type }}">
-                                        {{ lead_type }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </label>
-
-                        <label>
-                            Task:
-                            <select
-                                name="bidders[0][tasks]"
-                                class="tasks-select"
-                                data-selected-tasks="[]"
-                                required
-                            ></select>
-                        </label>
-
-                        <label>
-                            Min Price:
-                            <input type="number" step="0.01" name="bidders[0][min_price]">
-                        </label>
-
-                        <label>
-                            Max Price:
-                            <input type="number" step="0.01" name="bidders[0][max_price]">
-                        </label>
-
-                        <div class="fs-props">
-                            <h4>FS Props</h4>
-
-                            <div class="fs-prop-group calls-fs-props">
-                                <label>
-                                    Pest:
-                                    <select name="bidders[0][pest]" class="fs-prop-input">
-                                        <option value="">-- Select Pest --</option>
-
-                                        {% for pest in call_pest_options %}
-                                            <option value="{{ pest }}">
-                                                {{ pest }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-
-                                <label>
-                                    Job Type:
-                                    <select name="bidders[0][job_type]" class="fs-prop-input">
-                                        <option value="">-- Select Job Type --</option>
-
-                                        {% for job_type in call_job_type_options %}
-                                            <option value="{{ job_type }}">
-                                                {{ job_type }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-                            </div>
-
-                            <div class="fs-prop-group leads-fs-props">
-                                <label>
-                                    Material:
-                                    <select name="bidders[0][material]" class="fs-prop-input">
-                                        <option value="">-- Select Material --</option>
-
-                                        {% for material in lead_material_options %}
-                                            <option value="{{ material }}">
-                                                {{ material }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-
-                                <label>
-                                    Property Type:
-                                    <select name="bidders[0][property_type]" class="fs-prop-input">
-                                        <option value="">-- Select Property Type --</option>
-
-                                        {% for property_type in lead_property_type_options %}
-                                            <option value="{{ property_type }}">
-                                                {{ property_type }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-
-                                <label>
-                                    Job Type:
-                                    <select name="bidders[0][job_type]" class="fs-prop-input">
-                                        <option value="">-- Select Job Type --</option>
-
-                                        {% for job_type in lead_job_type_options %}
-                                            <option value="{{ job_type }}">
-                                                {{ job_type }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-                            </div>
+            <section class="nested-section">
+                <div class="nested-header">
+                    <div>
+                        <h2>Bidders</h2>
+                        <div class="subtitle">
+                            Add bidder rules for calls or leads.
                         </div>
                     </div>
-                {% endif %}
-            </div>
 
-            <button type="button" class="secondary" onclick="addBidder()">
-                Add Bidder
-            </button>
-        </div>
-
-        <hr>
-
-        <div class="button-row">
-            <button type="submit" class="primary">
-                Save Setting
-            </button>
-
-            <a class="button-link secondary" href="{{ url_for('settings.settings_index') }}">
-                Cancel
-            </a>
-        </div>
-    </form>
-
-    <script>
-        const BIDDER_NAMES = {{ bidder_names | tojson }};
-        const LEAD_TYPES = {{ lead_types | tojson }};
-        const CALL_TASKS = {{ call_tasks | tojson }};
-        const LEAD_TASKS = {{ lead_tasks | tojson }};
-
-        const CALL_PEST_OPTIONS = {{ call_pest_options | tojson }};
-        const CALL_JOB_TYPE_OPTIONS = {{ call_job_type_options | tojson }};
-        const LEAD_MATERIAL_OPTIONS = {{ lead_material_options | tojson }};
-        const LEAD_PROPERTY_TYPE_OPTIONS = {{ lead_property_type_options | tojson }};
-        const LEAD_JOB_TYPE_OPTIONS = {{ lead_job_type_options | tojson }};
-
-        let bidderIndex = document.querySelectorAll(".bidder-card").length;
-
-        document.addEventListener("DOMContentLoaded", function () {
-            initializeAllBidderCards();
-        });
-
-        function initializeAllBidderCards() {
-            const cards = document.querySelectorAll(".bidder-card");
-
-            cards.forEach(function (card) {
-                refreshTasksForCard(card);
-                refreshFsPropsVisibility(card);
-            });
-
-            renumberBidderCards();
-        }
-
-        function addBidder() {
-            const container = document.getElementById("bidders-container");
-
-            const card = document.createElement("div");
-            card.className = "bidder-card";
-            card.dataset.bidderIndex = bidderIndex;
-
-            card.innerHTML = buildBidderCardHtml(bidderIndex);
-
-            container.appendChild(card);
-
-            refreshTasksForCard(card);
-            refreshFsPropsVisibility(card);
-            renumberBidderCards();
-
-            bidderIndex += 1;
-        }
-
-        function buildBidderCardHtml(index) {
-            return `
-                <div class="bidder-header">
-                    <h3>Bidder</h3>
-
-                    <button type="button" class="danger" onclick="removeBidder(this)">
-                        Remove
+                    <button type="button" class="secondary" onclick="addBidder()">
+                        Add Bidder
                     </button>
                 </div>
 
-                <label>
-                    Bidder Name:
-                    <select
-                        name="bidders[${index}][name]"
-                        class="bidder-name-select"
-                        onchange="handleBidderNameChange(this)"
-                        required
-                    >
-                        ${buildOptionsHtml(BIDDER_NAMES, "Internal")}
-                    </select>
-                </label>
+                <div id="bidders-container">
+                    {% if setting and setting.get("bidders") %}
+                        {% for bidder in setting.get("bidders", []) %}
+                            <div class="bidder-card" data-bidder-index="{{ loop.index0 }}">
+                                <div class="bidder-card-header">
+                                    <h3>Bidder {{ loop.index }}</h3>
 
-                <label>
-                    Type:
-                    <select
-                        name="bidders[${index}][lead_type]"
-                        class="lead-type-select"
-                        onchange="handleLeadTypeChange(this)"
-                        required
-                    >
-                        ${buildOptionsHtml(LEAD_TYPES, "Calls")}
-                    </select>
-                </label>
+                                    <button
+                                        type="button"
+                                        class="danger"
+                                        onclick="removeBidder(this)"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
 
-                <label>
-                    Task:
-                    <select
-                        name="bidders[${index}][tasks]"
-                        class="tasks-select"
-                        data-selected-tasks="[]"
-                        required
-                    ></select>
-                </label>
+                                <div class="form-grid">
+                                    <div class="field">
+                                        <label>Bidder Name</label>
+                                        <select name="bidders[{{ loop.index0 }}][name]" onchange="handleBidderChange(this)">
+                                            {% for bidder_name in bidder_names %}
+                                                <option
+                                                    value="{{ bidder_name }}"
+                                                    {% if bidder.name == bidder_name %}selected{% endif %}
+                                                >
+                                                    {{ bidder_name }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                <label>
-                    Min Price:
-                    <input type="number" step="0.01" name="bidders[${index}][min_price]">
-                </label>
+                                    <div class="field">
+                                        <label>Lead Type</label>
+                                        <select name="bidders[{{ loop.index0 }}][lead_type]" onchange="handleLeadTypeChange(this)">
+                                            {% for lead_type in lead_types %}
+                                                <option
+                                                    value="{{ lead_type }}"
+                                                    {% if bidder.lead_type == lead_type %}selected{% endif %}
+                                                >
+                                                    {{ lead_type }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
 
-                <label>
-                    Max Price:
-                    <input type="number" step="0.01" name="bidders[${index}][max_price]">
-                </label>
+                                    <div class="field">
+                                        <label>Task</label>
+                                        <select name="bidders[{{ loop.index0 }}][tasks]" class="task-select">
+                                            {% set selected_task = bidder.get("tasks", [""])[0] if bidder.get("tasks") else "" %}
 
-                <div class="fs-props">
-                    <h4>FS Props</h4>
+                                            {% if bidder.lead_type == "Calls" %}
+                                                {% for task in call_tasks %}
+                                                    <option
+                                                        value="{{ task }}"
+                                                        {% if selected_task == task %}selected{% endif %}
+                                                    >
+                                                        {{ task }}
+                                                    </option>
+                                                {% endfor %}
+                                            {% else %}
+                                                {% for task in lead_tasks %}
+                                                    <option
+                                                        value="{{ task }}"
+                                                        {% if selected_task == task %}selected{% endif %}
+                                                    >
+                                                        {{ task }}
+                                                    </option>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </select>
+                                    </div>
 
-                    <div class="fs-prop-group calls-fs-props">
-                        <label>
-                            Pest:
-                            <select name="bidders[${index}][pest]" class="fs-prop-input">
-                                <option value="">-- Select Pest --</option>
-                                ${buildOptionsHtml(CALL_PEST_OPTIONS, "")}
-                            </select>
-                        </label>
+                                    <div class="field">
+                                        <label>Min Price</label>
+                                        <input
+                                            name="bidders[{{ loop.index0 }}][min_price]"
+                                            type="number"
+                                            step="0.01"
+                                            value="{{ bidder.min_price if bidder.min_price is not none else '' }}"
+                                        >
+                                    </div>
 
-                        <label>
-                            Job Type:
-                            <select name="bidders[${index}][job_type]" class="fs-prop-input">
-                                <option value="">-- Select Job Type --</option>
-                                ${buildOptionsHtml(CALL_JOB_TYPE_OPTIONS, "")}
-                            </select>
-                        </label>
-                    </div>
+                                    <div class="field">
+                                        <label>Max Price</label>
+                                        <input
+                                            name="bidders[{{ loop.index0 }}][max_price]"
+                                            type="number"
+                                            step="0.01"
+                                            value="{{ bidder.max_price if bidder.max_price is not none else '' }}"
+                                        >
+                                    </div>
+                                </div>
 
-                    <div class="fs-prop-group leads-fs-props">
-                        <label>
-                            Material:
-                            <select name="bidders[${index}][material]" class="fs-prop-input">
-                                <option value="">-- Select Material --</option>
-                                ${buildOptionsHtml(LEAD_MATERIAL_OPTIONS, "")}
-                            </select>
-                        </label>
+                                <div class="fs-props-section">
+                                    {% if bidder.name == "Internal" and bidder.lead_type == "Calls" %}
+                                        <div class="form-grid">
+                                            <div class="field">
+                                                <label>Pest</label>
+                                                <select name="bidders[{{ loop.index0 }}][pest]">
+                                                    <option value="">None</option>
+                                                    {% for option in call_pest_options %}
+                                                        <option
+                                                            value="{{ option }}"
+                                                            {% if bidder.get("fs_props", {}).get("pest") == option %}selected{% endif %}
+                                                        >
+                                                            {{ option }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
 
-                        <label>
-                            Property Type:
-                            <select name="bidders[${index}][property_type]" class="fs-prop-input">
-                                <option value="">-- Select Property Type --</option>
-                                ${buildOptionsHtml(LEAD_PROPERTY_TYPE_OPTIONS, "")}
-                            </select>
-                        </label>
+                                            <div class="field">
+                                                <label>Job Type</label>
+                                                <select name="bidders[{{ loop.index0 }}][job_type]">
+                                                    <option value="">None</option>
+                                                    {% for option in call_job_type_options %}
+                                                        <option
+                                                            value="{{ option }}"
+                                                            {% if bidder.get("fs_props", {}).get("job_type") == option %}selected{% endif %}
+                                                        >
+                                                            {{ option }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    {% elif bidder.name == "Internal" and bidder.lead_type == "Leads" %}
+                                        <div class="form-grid">
+                                            <div class="field">
+                                                <label>Material</label>
+                                                <select name="bidders[{{ loop.index0 }}][material]">
+                                                    <option value="">None</option>
+                                                    {% for option in lead_material_options %}
+                                                        <option
+                                                            value="{{ option }}"
+                                                            {% if bidder.get("fs_props", {}).get("material") == option %}selected{% endif %}
+                                                        >
+                                                            {{ option }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
 
-                        <label>
-                            Job Type:
-                            <select name="bidders[${index}][job_type]" class="fs-prop-input">
-                                <option value="">-- Select Job Type --</option>
-                                ${buildOptionsHtml(LEAD_JOB_TYPE_OPTIONS, "")}
-                            </select>
-                        </label>
-                    </div>
+                                            <div class="field">
+                                                <label>Property Type</label>
+                                                <select name="bidders[{{ loop.index0 }}][property_type]">
+                                                    <option value="">None</option>
+                                                    {% for option in lead_property_type_options %}
+                                                        <option
+                                                            value="{{ option }}"
+                                                            {% if bidder.get("fs_props", {}).get("property_type") == option %}selected{% endif %}
+                                                        >
+                                                            {{ option }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div class="field">
+                                                <label>Job Type</label>
+                                                <select name="bidders[{{ loop.index0 }}][job_type]">
+                                                    <option value="">None</option>
+                                                    {% for option in lead_job_type_options %}
+                                                        <option
+                                                            value="{{ option }}"
+                                                            {% if bidder.get("fs_props", {}).get("job_type") == option %}selected{% endif %}
+                                                        >
+                                                            {{ option }}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
-            `;
-        }
+            </section>
 
-        function buildOptionsHtml(options, selectedValue) {
-            return options.map(function (option) {
-                const selected = option === selectedValue ? "selected" : "";
+            <div class="form-actions">
+                {% if mode == "edit" %}
+                    <button type="submit">Save Changes</button>
+                {% else %}
+                    <button type="submit">Create Setting</button>
+                {% endif %}
 
-                return `
-                    <option value="${escapeHtml(option)}" ${selected}>
-                        ${escapeHtml(option)}
-                    </option>
-                `;
-            }).join("");
+                <a class="button secondary" href="{{ url_for('settings.settings_index') }}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </section>
+
+    <template id="bidder-template">
+        <div class="bidder-card" data-bidder-index="__INDEX__">
+            <div class="bidder-card-header">
+                <h3>Bidder __DISPLAY_INDEX__</h3>
+
+                <button type="button" class="danger" onclick="removeBidder(this)">
+                    Remove
+                </button>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label>Bidder Name</label>
+                    <select name="bidders[__INDEX__][name]" onchange="handleBidderChange(this)">
+                        {% for bidder_name in bidder_names %}
+                            <option value="{{ bidder_name }}">{{ bidder_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Lead Type</label>
+                    <select name="bidders[__INDEX__][lead_type]" onchange="handleLeadTypeChange(this)">
+                        {% for lead_type in lead_types %}
+                            <option value="{{ lead_type }}">{{ lead_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Task</label>
+                    <select name="bidders[__INDEX__][tasks]" class="task-select"></select>
+                </div>
+
+                <div class="field">
+                    <label>Min Price</label>
+                    <input name="bidders[__INDEX__][min_price]" type="number" step="0.01">
+                </div>
+
+                <div class="field">
+                    <label>Max Price</label>
+                    <input name="bidders[__INDEX__][max_price]" type="number" step="0.01">
+                </div>
+            </div>
+
+            <div class="fs-props-section"></div>
+        </div>
+    </template>
+
+    <script>
+        const callTasks = {{ call_tasks|tojson }};
+        const leadTasks = {{ lead_tasks|tojson }};
+        const callPestOptions = {{ call_pest_options|tojson }};
+        const callJobTypeOptions = {{ call_job_type_options|tojson }};
+        const leadMaterialOptions = {{ lead_material_options|tojson }};
+        const leadPropertyTypeOptions = {{ lead_property_type_options|tojson }};
+        const leadJobTypeOptions = {{ lead_job_type_options|tojson }};
+
+        let nextBidderIndex = document.querySelectorAll(".bidder-card").length;
+
+        function addBidder() {
+            const template = document.getElementById("bidder-template").innerHTML;
+            const displayIndex = nextBidderIndex + 1;
+
+            const html = template
+                .replaceAll("__INDEX__", nextBidderIndex)
+                .replaceAll("__DISPLAY_INDEX__", displayIndex);
+
+            const container = document.getElementById("bidders-container");
+            container.insertAdjacentHTML("beforeend", html);
+
+            const newCard = container.lastElementChild;
+            updateTaskOptions(newCard);
+            updateFsProps(newCard);
+
+            nextBidderIndex += 1;
         }
 
         function removeBidder(button) {
             const card = button.closest(".bidder-card");
             card.remove();
-            renumberBidderCards();
         }
 
-        function renumberBidderCards() {
-            const cards = document.querySelectorAll(".bidder-card");
-
-            cards.forEach(function (card, index) {
-                const heading = card.querySelector(".bidder-header h3");
-                heading.textContent = `Bidder ${index + 1}`;
-            });
+        function handleLeadTypeChange(select) {
+            const card = select.closest(".bidder-card");
+            updateTaskOptions(card);
+            updateFsProps(card);
         }
 
-        function handleBidderNameChange(selectElement) {
-            const card = selectElement.closest(".bidder-card");
-            refreshFsPropsVisibility(card);
+        function handleBidderChange(select) {
+            const card = select.closest(".bidder-card");
+            updateFsProps(card);
         }
 
-        function handleLeadTypeChange(selectElement) {
-            const card = selectElement.closest(".bidder-card");
-            refreshTasksForCard(card);
-            refreshFsPropsVisibility(card);
-        }
+        function updateTaskOptions(card) {
+            const leadTypeSelect = card.querySelector('select[name$="[lead_type]"]');
+            const taskSelect = card.querySelector(".task-select");
 
-        function refreshFsPropsVisibility(card) {
-            const bidderNameSelect = card.querySelector(".bidder-name-select");
-            const leadTypeSelect = card.querySelector(".lead-type-select");
-            const fsProps = card.querySelector(".fs-props");
-            const callsFsProps = card.querySelector(".calls-fs-props");
-            const leadsFsProps = card.querySelector(".leads-fs-props");
-
-            if (!bidderNameSelect || !leadTypeSelect || !fsProps || !callsFsProps || !leadsFsProps) {
+            if (!leadTypeSelect || !taskSelect) {
                 return;
             }
 
-            const isInternal = bidderNameSelect.value === "Internal";
-            const isCalls = leadTypeSelect.value === "Calls";
-            const isLeads = leadTypeSelect.value === "Leads";
+            const leadType = leadTypeSelect.value;
+            const tasks = leadType === "Calls" ? callTasks : leadTasks;
 
-            fsProps.style.display = isInternal ? "block" : "none";
-            callsFsProps.style.display = isInternal && isCalls ? "block" : "none";
-            leadsFsProps.style.display = isInternal && isLeads ? "block" : "none";
+            taskSelect.innerHTML = "";
 
-            setInputsDisabled(callsFsProps, !(isInternal && isCalls));
-            setInputsDisabled(leadsFsProps, !(isInternal && isLeads));
-
-            if (!isInternal) {
-                clearInputs(callsFsProps);
-                clearInputs(leadsFsProps);
-            }
-        }
-
-        function setInputsDisabled(container, shouldDisable) {
-            const inputs = container.querySelectorAll("input, select");
-
-            inputs.forEach(function (input) {
-                input.disabled = shouldDisable;
-            });
-        }
-
-        function clearInputs(container) {
-            const inputs = container.querySelectorAll("input, select");
-
-            inputs.forEach(function (input) {
-                input.value = "";
-            });
-        }
-
-        function refreshTasksForCard(card) {
-            const leadTypeSelect = card.querySelector(".lead-type-select");
-            const tasksSelect = card.querySelector(".tasks-select");
-
-            if (!leadTypeSelect || !tasksSelect) {
-                return;
-            }
-
-            const existingSelectedTask = tasksSelect.value;
-            const savedSelectedTasks = parseSavedSelectedTasks(tasksSelect);
-
-            const selectedTask = existingSelectedTask || savedSelectedTasks[0] || "";
-
-            const taskOptions = leadTypeSelect.value === "Leads"
-                ? LEAD_TASKS
-                : CALL_TASKS;
-
-            tasksSelect.innerHTML = "";
-
-            const placeholderOption = document.createElement("option");
-            placeholderOption.value = "";
-            placeholderOption.textContent = "-- Select Task --";
-            tasksSelect.appendChild(placeholderOption);
-
-            taskOptions.forEach(function (task) {
+            tasks.forEach((task) => {
                 const option = document.createElement("option");
                 option.value = task;
                 option.textContent = task;
-
-                if (task === selectedTask) {
-                    option.selected = true;
-                }
-
-                tasksSelect.appendChild(option);
+                taskSelect.appendChild(option);
             });
-
-            tasksSelect.dataset.selectedTasks = "[]";
         }
 
-        function parseSavedSelectedTasks(tasksSelect) {
-            try {
-                return JSON.parse(tasksSelect.dataset.selectedTasks || "[]");
-            } catch (error) {
-                return [];
+        function updateFsProps(card) {
+            const bidderSelect = card.querySelector('select[name$="[name]"]');
+            const leadTypeSelect = card.querySelector('select[name$="[lead_type]"]');
+            const fsPropsSection = card.querySelector(".fs-props-section");
+            const index = card.dataset.bidderIndex;
+
+            if (!bidderSelect || !leadTypeSelect || !fsPropsSection) {
+                return;
+            }
+
+            const bidderName = bidderSelect.value;
+            const leadType = leadTypeSelect.value;
+
+            fsPropsSection.innerHTML = "";
+
+            if (bidderName !== "Internal") {
+                return;
+            }
+
+            if (leadType === "Calls") {
+                fsPropsSection.innerHTML = `
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Pest</label>
+                            <select name="bidders[${index}][pest]">
+                                <option value="">None</option>
+                                ${callPestOptions.map((option) => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Job Type</label>
+                            <select name="bidders[${index}][job_type]">
+                                <option value="">None</option>
+                                ${callJobTypeOptions.map((option) => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (leadType === "Leads") {
+                fsPropsSection.innerHTML = `
+                    <div class="form-grid">
+                        <div class="field">
+                            <label>Material</label>
+                            <select name="bidders[${index}][material]">
+                                <option value="">None</option>
+                                ${leadMaterialOptions.map((option) => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Property Type</label>
+                            <select name="bidders[${index}][property_type]">
+                                <option value="">None</option>
+                                ${leadPropertyTypeOptions.map((option) => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        </div>
+
+                        <div class="field">
+                            <label>Job Type</label>
+                            <select name="bidders[${index}][job_type]">
+                                <option value="">None</option>
+                                ${leadJobTypeOptions.map((option) => `<option value="${option}">${option}</option>`).join("")}
+                            </select>
+                        </div>
+                    </div>
+                `;
             }
         }
 
-        function escapeHtml(value) {
-            return String(value)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-        }
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll(".bidder-card").forEach((card) => {
+                const taskSelect = card.querySelector(".task-select");
+
+                if (!taskSelect || taskSelect.options.length === 0) {
+                    updateTaskOptions(card);
+                }
+            });
+
+            if (document.querySelectorAll(".bidder-card").length === 0) {
+                addBidder();
+            }
+        });
     </script>
-</body>
-</html>
+{% endblock %}
