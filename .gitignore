@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+venv/
+env/
+.venv/
+virtualenv/
+ENV/
+
+# cPanel / Passenger
+tmp/
+passenger_wsgi.pyc
+
+# Flask / local env
+.env
+.env.*
+instance/
+
+# Logs
+*.log
+logs/
+
+# Local data / generated files
+data/*.json
+data/*.csv
+data/*.txt
+
+# Keep data folder structure if needed
+!data/.gitkeep
+
+# SQLite databases
+*.sqlite3
+*.db
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build/cache
+.cache/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+.htaccess

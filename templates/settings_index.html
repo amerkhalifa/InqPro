@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Settings</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            margin-bottom: 8px;
+        }
+
+        .top-bar {
+            margin-bottom: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 8px 12px;
+            background: #222;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button.secondary {
+            background: #666;
+        }
+
+        .button.danger {
+            background: #b00020;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f5f5f5;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .empty {
+            padding: 16px;
+            border: 1px solid #ddd;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .muted {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>File Settings</h1>
+
+    <div class="top-bar">
+        <a class="button" href="{{ url_for('create_setting') }}">
+            Create New Setting
+        </a>
+    </div>
+
+    {% if geoid_lists %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>ID</th>
+                    <th>Zip → County</th>
+                    <th>County → State</th>
+                    <th>Bidders</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for setting in geoid_lists %}
+                    <tr>
+                        <td>{{ setting.name }}</td>
+                        <td>{{ setting.id }}</td>
+                        <td>{{ setting["zip->county"] }}</td>
+                        <td>{{ setting["county->state"] }}</td>
+                        <td>
+                            {% if setting.bidders %}
+                                {{ setting.bidders | length }}
+
+                                <div class="muted">
+                                    {% for bidder in setting.bidders %}
+                                        {{ bidder.name }} - {{ bidder.lead_type }}{% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a
+                                    class="button secondary"
+                                    href="{{ url_for('edit_setting', setting_id=setting.id) }}"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('delete_setting', setting_id=setting.id) }}"
+                                    onsubmit="return confirm('Delete this setting?');"
+                                >
+                                    <button class="button danger" type="submit">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty">
+            No file settings yet.
+        </div>
+    {% endif %}
+</body>
+</html>
