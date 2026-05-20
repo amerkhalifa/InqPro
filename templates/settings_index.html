@@ -79,7 +79,7 @@
     <h1>File Settings</h1>
 
     <div class="top-bar">
-        <a class="button" href="{{ url_for('create_setting') }}">
+        <a class="button" href="{{ url_for('settings.create_setting') }}">
             Create New Setting
         </a>
     </div>
@@ -121,14 +121,14 @@
                             <div class="actions">
                                 <a
                                     class="button secondary"
-                                    href="{{ url_for('edit_setting', setting_id=setting.id) }}"
+                                    href="{{ url_for('settings.edit_setting', setting_id=setting.id) }}"
                                 >
                                     Edit
                                 </a>
 
                                 <form
                                     method="POST"
-                                    action="{{ url_for('delete_setting', setting_id=setting.id) }}"
+                                    action="{{ url_for('settings.delete_setting', setting_id=setting.id) }}"
                                     onsubmit="return confirm('Delete this setting?');"
                                 >
                                     <button class="button danger" type="submit">
